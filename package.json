@@ -1,0 +1,16 @@
+{
+  "name": "zoo-management-system",
+  "version": "1.0.0",
+  "description": "A full-stack zoo management system",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "create-client": "npx create-react-app client"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
