@@ -7,7 +7,14 @@ const User = require('../models/User');
 // POST /api/auth/register - Register new user
 router.post('/register', async (req, res) => {
   try {
-    console.log('Registration request received:', req.body);
+    console.log('Registration request received:', {
+      body: req.body,
+      headers: {
+        origin: req.headers.origin,
+        'content-type': req.headers['content-type'],
+        authorization: req.headers.authorization ? 'present' : 'not present'
+      }
+    });
     const { username, email, password, role } = req.body;
     
     // Validate required fields
@@ -63,6 +70,13 @@ router.post('/register', async (req, res) => {
 // POST /api/auth/login - Login user
 router.post('/login', async (req, res) => {
   try {
+    console.log('Login request received:', {
+      body: { email: req.body.email, password: '***' },
+      headers: {
+        origin: req.headers.origin,
+        'content-type': req.headers['content-type']
+      }
+    });
     const { email, password } = req.body;
     
     const user = await User.findOne({ email });

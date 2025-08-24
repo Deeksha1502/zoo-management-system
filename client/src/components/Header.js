@@ -13,7 +13,7 @@ const Header = () => {
     <header className="header">
       <div className="container">
         <nav className="nav">
-          <h1>🦁 Zoo Management System</h1>
+          <h1>Zoo Management System</h1>
           <ul>
             <li><Link to="/">Dashboard</Link></li>
             <li><Link to="/animals">Animals</Link></li>

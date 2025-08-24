@@ -94,7 +94,7 @@ const Login = () => {
             fontSize: '28px',
             boxShadow: '0 8px 32px rgba(59, 130, 246, 0.3)'
           }}>
-            🦁
+            🏢
           </div>
           <h1 style={{ 
             margin: '0 0 8px 0', 

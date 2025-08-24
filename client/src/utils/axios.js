@@ -5,6 +5,10 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
   withCredentials: true,
   timeout: 10000, // 10 second timeout
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  }
 });
 
 // Request interceptor to add auth token
@@ -41,8 +45,14 @@ api.interceptors.response.use(
       url: error.config?.url,
       status: error.response?.status,
       message: error.response?.data?.message || error.message,
-      data: error.response?.data
+      data: error.response?.data,
+      code: error.code
     });
+    
+    // Handle CORS errors
+    if (error.code === 'ERR_NETWORK' || error.message.includes('CORS')) {
+      console.error('CORS Error detected. Check server CORS configuration.');
+    }
     
     if (error.response?.status === 401) {
       console.log('Authentication error - redirecting to login');

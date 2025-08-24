@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🦁 Zoo Management System Setup"
+echo "Zoo Management System Setup"
 echo "=============================="
 
 # Check if Node.js is installed

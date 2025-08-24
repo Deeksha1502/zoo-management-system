@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/axios';
 import { useAuth } from '../context/AuthContext';
-import AuthStatus from '../components/AuthStatus';
 
 const Animals = () => {
   const { user } = useAuth();
@@ -153,150 +152,201 @@ const Animals = () => {
     setShowForm(false);
   };
 
-  if (loading) return <div>Loading animals...</div>;
+  if (loading) return (
+    <div className="loading">
+      Loading animals...
+    </div>
+  );
 
   return (
-    <div>
-      <AuthStatus />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h2>Animals</h2>
-        <div>
-          <button 
-            className="btn" 
-            onClick={async () => {
-              try {
-                const response = await api.get('/api/animals');
-                console.log('Test API call successful:', response.data.length, 'animals');
-                alert(`API test successful! Found ${response.data.length} animals`);
-              } catch (error) {
-                console.error('Test API call failed:', error);
-                alert('API test failed: ' + (error.response?.data?.message || error.message));
-              }
-            }}
-            style={{ marginRight: '10px' }}
-          >
-            Test API
+    <div className="fade-in">
+      <div className="page-header">
+        <h1 className="page-title">Animal Management</h1>
+        <div className="page-actions">
+          <div style={{ 
+            background: 'linear-gradient(135deg, var(--primary-50) 0%, var(--primary-100) 100%)',
+            padding: '0.75rem 1rem',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--primary-200)',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            color: 'var(--primary-700)'
+          }}>
+            Total Animals: {animals.length}
+          </div>
+          <button className="btn btn-lg" onClick={() => setShowForm(true)}>
+            Add New Animal
           </button>
-          <button className="btn" onClick={() => setShowForm(true)}>Add New Animal</button>
         </div>
       </div>
 
       {showForm && (
-        <div className="card" style={{ marginBottom: '2rem' }}>
-          <h3>{editingAnimal ? 'Edit Animal' : 'Add New Animal'}</h3>
+        <div className="card" style={{ marginBottom: '3rem' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '1rem', 
+            marginBottom: '2rem',
+            paddingBottom: '1rem',
+            borderBottom: '2px solid var(--gray-100)'
+          }}>
+            <div style={{ 
+              width: '48px', 
+              height: '48px', 
+              background: 'linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%)',
+              borderRadius: 'var(--radius-lg)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.5rem'
+            }}>
+              {editingAnimal ? '✏️' : '🐾'}
+            </div>
+            <div>
+              <h3 style={{ 
+                fontSize: '1.5rem', 
+                fontWeight: '700', 
+                color: 'var(--gray-900)',
+                marginBottom: '0.25rem'
+              }}>
+                {editingAnimal ? 'Edit Animal' : 'Add New Animal'}
+              </h3>
+              <p style={{ color: 'var(--gray-600)', fontSize: '0.875rem' }}>
+                {editingAnimal ? 'Update animal information' : 'Enter details for the new animal'}
+              </p>
+            </div>
+          </div>
+          
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Name</label>
+            <div className="form-grid">
+              <div className="form-group">
+                <label className="form-label">🏷️ Animal Name</label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                  className="form-input"
+                  placeholder="Enter animal name"
                 />
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Species</label>
+              
+              <div className="form-group">
+                <label className="form-label">🧬 Species</label>
                 <input
                   type="text"
                   name="species"
                   value={formData.species}
                   onChange={handleInputChange}
                   required
-                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                  className="form-input"
+                  placeholder="e.g., African Lion, Bengal Tiger"
                 />
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Category</label>
+              
+              <div className="form-group">
+                <label className="form-label">📂 Category</label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                  className="form-select"
                 >
-                  <option value="mammals">Mammals</option>
-                  <option value="birds">Birds</option>
-                  <option value="reptiles">Reptiles</option>
-                  <option value="amphibians">Amphibians</option>
-                  <option value="fish">Fish</option>
-                  <option value="invertebrates">Invertebrates</option>
+                  <option value="mammals">🦁 Mammals</option>
+                  <option value="birds">🦅 Birds</option>
+                  <option value="reptiles">🦎 Reptiles</option>
+                  <option value="amphibians">🐸 Amphibians</option>
+                  <option value="fish">🐠 Fish</option>
+                  <option value="invertebrates">🦋 Invertebrates</option>
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Age</label>
+              
+              <div className="form-group">
+                <label className="form-label">🎂 Age (years)</label>
                 <input
                   type="number"
                   name="age"
                   value={formData.age}
                   onChange={handleInputChange}
                   min="0"
-                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                  className="form-input"
+                  placeholder="Age in years"
                 />
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Gender</label>
+              
+              <div className="form-group">
+                <label className="form-label">⚧️ Gender</label>
                 <select
                   name="gender"
                   value={formData.gender}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                  className="form-select"
                 >
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="unknown">Unknown</option>
+                  <option value="male">♂️ Male</option>
+                  <option value="female">♀️ Female</option>
+                  <option value="unknown">❓ Unknown</option>
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Health Status</label>
+              
+              <div className="form-group">
+                <label className="form-label">🏥 Health Status</label>
                 <select
                   name="healthStatus"
                   value={formData.healthStatus}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                  className="form-select"
                 >
-                  <option value="healthy">Healthy</option>
-                  <option value="sick">Sick</option>
-                  <option value="injured">Injured</option>
-                  <option value="quarantine">Quarantine</option>
+                  <option value="healthy">✅ Healthy</option>
+                  <option value="sick">🤒 Sick</option>
+                  <option value="injured">🩹 Injured</option>
+                  <option value="quarantine">🔒 Quarantine</option>
                 </select>
               </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Habitat</label>
+              
+              <div className="form-group">
+                <label className="form-label">🏠 Habitat Assignment</label>
                 <select
                   name="habitat"
                   value={formData.habitat}
                   onChange={handleInputChange}
-                  style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                  className="form-select"
                 >
-                  <option value="">No Habitat Assigned</option>
+                  <option value="">🚫 No Habitat Assigned</option>
                   {habitats.map(habitat => {
                     const availableSpace = habitat.capacity - habitat.currentOccupancy;
                     return (
                       <option key={habitat._id} value={habitat._id}>
-                        {habitat.name} ({availableSpace} spaces available)
+                        🏞️ {habitat.name} ({availableSpace} spaces available)
                       </option>
                     );
                   })}
                 </select>
               </div>
             </div>
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Notes</label>
+            
+            <div className="form-group">
+              <label className="form-label">📝 Additional Notes</label>
               <textarea
                 name="notes"
                 value={formData.notes}
                 onChange={handleInputChange}
-                rows="3"
-                style={{ width: '100%', padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}
+                className="form-textarea"
+                placeholder="Any additional information about the animal..."
+                rows="4"
               />
             </div>
-            <div>
-              <button type="submit" className="btn" style={{ marginRight: '0.5rem' }}>
+            
+            <div style={{ 
+              display: 'flex', 
+              gap: '1rem', 
+              paddingTop: '1.5rem',
+              borderTop: '1px solid var(--gray-200)'
+            }}>
+              <button type="submit" className="btn btn-lg">
                 {editingAnimal ? 'Update Animal' : 'Add Animal'}
               </button>
-              <button type="button" onClick={resetForm} className="btn" style={{ backgroundColor: '#6c757d' }}>
+              <button type="button" onClick={resetForm} className="btn btn-secondary btn-lg">
                 Cancel
               </button>
             </div>
@@ -304,51 +354,247 @@ const Animals = () => {
         </div>
       )}
       
-      <div style={{ display: 'grid', gap: '1rem' }}>
+      <div className="grid grid-cols-1">
         {animals.length === 0 ? (
           <div className="card">
-            <p>No animals found. Add some animals to get started!</p>
+            <div className="empty-state">
+              <div className="empty-state-icon">🦁</div>
+              <h3 className="empty-state-title">No Animals Yet</h3>
+              <p className="empty-state-description">
+                Start building your zoo by adding your first animal. Click the "Add New Animal" button above to get started.
+              </p>
+              <button className="btn btn-lg" onClick={() => setShowForm(true)}>
+                Add Your First Animal
+              </button>
+            </div>
           </div>
         ) : (
-          animals.map(animal => (
-            <div key={animal._id} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                <div>
-                  <h3>{animal.name}</h3>
-                  <p><strong>Species:</strong> {animal.species}</p>
-                  <p><strong>Category:</strong> {animal.category}</p>
-                  <p><strong>Age:</strong> {animal.age} years</p>
-                  <p><strong>Gender:</strong> {animal.gender}</p>
-                  <p><strong>Health Status:</strong> 
-                    <span style={{ 
-                      color: animal.healthStatus === 'healthy' ? '#2ecc71' : '#e74c3c',
-                      fontWeight: 'bold',
-                      marginLeft: '0.5rem'
+          animals.map(animal => {
+            const getCategoryIcon = (category) => {
+              const icons = {
+                mammals: '🦁',
+                birds: '🦅', 
+                reptiles: '🦎',
+                amphibians: '🐸',
+                fish: '🐠',
+                invertebrates: '🦋'
+              };
+              return icons[category] || '🐾';
+            };
+
+            const getGenderIcon = (gender) => {
+              const icons = {
+                male: '♂️',
+                female: '♀️',
+                unknown: '❓'
+              };
+              return icons[gender] || '❓';
+            };
+
+            const getHealthStatusClass = (status) => {
+              const classes = {
+                healthy: 'status-healthy',
+                sick: 'status-sick',
+                injured: 'status-injured',
+                quarantine: 'status-quarantine'
+              };
+              return classes[status] || 'status-healthy';
+            };
+
+            return (
+              <div key={animal._id} className="card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '2rem' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+                      <div style={{ 
+                        width: '60px', 
+                        height: '60px', 
+                        background: 'linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%)',
+                        borderRadius: 'var(--radius-xl)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '2rem',
+                        border: '2px solid var(--primary-300)'
+                      }}>
+                        {getCategoryIcon(animal.category)}
+                      </div>
+                      <div>
+                        <h3 style={{ 
+                          fontSize: '1.5rem', 
+                          fontWeight: '700', 
+                          color: 'var(--gray-900)',
+                          marginBottom: '0.25rem'
+                        }}>
+                          {animal.name}
+                        </h3>
+                        <p style={{ 
+                          color: 'var(--gray-600)', 
+                          fontSize: '1rem',
+                          fontWeight: '500'
+                        }}>
+                          {animal.species}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                      gap: '1rem',
+                      marginBottom: '1.5rem'
                     }}>
-                      {animal.healthStatus}
-                    </span>
-                  </p>
-                  <p><strong>Habitat:</strong> {animal.habitat?.name || 'Not assigned'}</p>
-                  {animal.notes && <p><strong>Notes:</strong> {animal.notes}</p>}
-                </div>
-                <div>
-                  <button 
-                    className="btn" 
-                    style={{ marginRight: '0.5rem' }}
-                    onClick={() => handleEdit(animal)}
-                  >
-                    Edit
-                  </button>
-                  <button 
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(animal._id)}
-                  >
-                    Delete
-                  </button>
+                      <div style={{ 
+                        background: 'var(--gray-50)', 
+                        padding: '1rem', 
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--gray-200)'
+                      }}>
+                        <div style={{ 
+                          fontSize: '0.75rem', 
+                          fontWeight: '600', 
+                          color: 'var(--gray-500)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          marginBottom: '0.25rem'
+                        }}>
+                          Category
+                        </div>
+                        <div style={{ 
+                          fontSize: '0.875rem', 
+                          fontWeight: '600', 
+                          color: 'var(--gray-900)',
+                          textTransform: 'capitalize'
+                        }}>
+                          {getCategoryIcon(animal.category)} {animal.category}
+                        </div>
+                      </div>
+                      
+                      <div style={{ 
+                        background: 'var(--gray-50)', 
+                        padding: '1rem', 
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--gray-200)'
+                      }}>
+                        <div style={{ 
+                          fontSize: '0.75rem', 
+                          fontWeight: '600', 
+                          color: 'var(--gray-500)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          marginBottom: '0.25rem'
+                        }}>
+                          Age & Gender
+                        </div>
+                        <div style={{ 
+                          fontSize: '0.875rem', 
+                          fontWeight: '600', 
+                          color: 'var(--gray-900)'
+                        }}>
+                          {animal.age ? `${animal.age} years` : 'Unknown age'} • {getGenderIcon(animal.gender)} {animal.gender}
+                        </div>
+                      </div>
+                      
+                      <div style={{ 
+                        background: 'var(--gray-50)', 
+                        padding: '1rem', 
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--gray-200)'
+                      }}>
+                        <div style={{ 
+                          fontSize: '0.75rem', 
+                          fontWeight: '600', 
+                          color: 'var(--gray-500)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          marginBottom: '0.25rem'
+                        }}>
+                          Health Status
+                        </div>
+                        <span className={`status-badge ${getHealthStatusClass(animal.healthStatus)}`}>
+                          {animal.healthStatus}
+                        </span>
+                      </div>
+                      
+                      <div style={{ 
+                        background: 'var(--gray-50)', 
+                        padding: '1rem', 
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--gray-200)'
+                      }}>
+                        <div style={{ 
+                          fontSize: '0.75rem', 
+                          fontWeight: '600', 
+                          color: 'var(--gray-500)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          marginBottom: '0.25rem'
+                        }}>
+                          Habitat
+                        </div>
+                        <div style={{ 
+                          fontSize: '0.875rem', 
+                          fontWeight: '600', 
+                          color: animal.habitat ? 'var(--gray-900)' : 'var(--gray-500)'
+                        }}>
+                          {animal.habitat ? `🏞️ ${animal.habitat.name}` : '🚫 Not assigned'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {animal.notes && (
+                      <div style={{ 
+                        background: 'var(--primary-50)', 
+                        padding: '1rem', 
+                        borderRadius: 'var(--radius-lg)',
+                        border: '1px solid var(--primary-200)',
+                        marginBottom: '1rem'
+                      }}>
+                        <div style={{ 
+                          fontSize: '0.75rem', 
+                          fontWeight: '600', 
+                          color: 'var(--primary-600)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          marginBottom: '0.5rem'
+                        }}>
+                          📝 Notes
+                        </div>
+                        <p style={{ 
+                          color: 'var(--primary-700)', 
+                          fontSize: '0.875rem',
+                          lineHeight: '1.5',
+                          margin: 0
+                        }}>
+                          {animal.notes}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    gap: '0.75rem',
+                    minWidth: '120px'
+                  }}>
+                    <button 
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => handleEdit(animal)}
+                    >
+                      Edit
+                    </button>
+                    <button 
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(animal._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
